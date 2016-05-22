@@ -12,7 +12,36 @@
 		D9F03ABD1C808F8000372E43 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9F03ABB1C808F8000372E43 /* Main.storyboard */; };
 		D9F03ABF1C808F8000372E43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9F03ABE1C808F8000372E43 /* Assets.xcassets */; };
 		D9F03AC21C808F8000372E43 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9F03AC01C808F8000372E43 /* LaunchScreen.storyboard */; };
+		D9F03AD01C80914300372E43 /* ActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F03ACF1C80914300372E43 /* ActionViewController.swift */; };
+		D9F03AD31C80914300372E43 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D9F03AD11C80914300372E43 /* MainInterface.storyboard */; };
+		D9F03AD71C80914300372E43 /* Action Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = D9F03ACD1C80914300372E43 /* Action Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		D9F03ADD1C809D4A00372E43 /* ItemProviderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F03ADC1C809D4A00372E43 /* ItemProviderTableViewCell.swift */; };
+		D9F03ADF1C80D42A00372E43 /* ItemProviderDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F03ADE1C80D42A00372E43 /* ItemProviderDetailsViewController.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D9F03AD51C80914300372E43 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9F03AAC1C808F8000372E43 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D9F03ACC1C80914300372E43;
+			remoteInfo = "Action Extension";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D9F03ADB1C80914300372E43 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				D9F03AD71C80914300372E43 /* Action Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		D9F03AB41C808F8000372E43 /* Share Sheet Debugger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Share Sheet Debugger.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -22,10 +51,23 @@
 		D9F03ABE1C808F8000372E43 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D9F03AC11C808F8000372E43 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D9F03AC31C808F8000372E43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D9F03ACD1C80914300372E43 /* Action Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Action Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9F03ACF1C80914300372E43 /* ActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionViewController.swift; sourceTree = "<group>"; };
+		D9F03AD21C80914300372E43 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		D9F03AD41C80914300372E43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D9F03ADC1C809D4A00372E43 /* ItemProviderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemProviderTableViewCell.swift; sourceTree = "<group>"; };
+		D9F03ADE1C80D42A00372E43 /* ItemProviderDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemProviderDetailsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		D9F03AB11C808F8000372E43 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D9F03ACA1C80914300372E43 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -39,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				D9F03AB61C808F8000372E43 /* Share Sheet Debugger */,
+				D9F03ACE1C80914300372E43 /* Action Extension */,
 				D9F03AB51C808F8000372E43 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -47,6 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				D9F03AB41C808F8000372E43 /* Share Sheet Debugger.app */,
+				D9F03ACD1C80914300372E43 /* Action Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -64,6 +108,18 @@
 			path = "Share Sheet Debugger";
 			sourceTree = "<group>";
 		};
+		D9F03ACE1C80914300372E43 /* Action Extension */ = {
+			isa = PBXGroup;
+			children = (
+				D9F03ACF1C80914300372E43 /* ActionViewController.swift */,
+				D9F03ADE1C80D42A00372E43 /* ItemProviderDetailsViewController.swift */,
+				D9F03ADC1C809D4A00372E43 /* ItemProviderTableViewCell.swift */,
+				D9F03AD11C80914300372E43 /* MainInterface.storyboard */,
+				D9F03AD41C80914300372E43 /* Info.plist */,
+			);
+			path = "Action Extension";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -74,15 +130,34 @@
 				D9F03AB01C808F8000372E43 /* Sources */,
 				D9F03AB11C808F8000372E43 /* Frameworks */,
 				D9F03AB21C808F8000372E43 /* Resources */,
+				D9F03ADB1C80914300372E43 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				D9F03AD61C80914300372E43 /* PBXTargetDependency */,
 			);
 			name = "Share Sheet Debugger";
 			productName = "Share Sheet Debugger";
 			productReference = D9F03AB41C808F8000372E43 /* Share Sheet Debugger.app */;
 			productType = "com.apple.product-type.application";
+		};
+		D9F03ACC1C80914300372E43 /* Action Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D9F03AD81C80914300372E43 /* Build configuration list for PBXNativeTarget "Action Extension" */;
+			buildPhases = (
+				D9F03AC91C80914300372E43 /* Sources */,
+				D9F03ACA1C80914300372E43 /* Frameworks */,
+				D9F03ACB1C80914300372E43 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Action Extension";
+			productName = "Action Extension";
+			productReference = D9F03ACD1C80914300372E43 /* Action Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -95,6 +170,9 @@
 				ORGANIZATIONNAME = "Yetii Ltd.";
 				TargetAttributes = {
 					D9F03AB31C808F8000372E43 = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
+					D9F03ACC1C80914300372E43 = {
 						CreatedOnToolsVersion = 7.2.1;
 					};
 				};
@@ -113,6 +191,7 @@
 			projectRoot = "";
 			targets = (
 				D9F03AB31C808F8000372E43 /* Share Sheet Debugger */,
+				D9F03ACC1C80914300372E43 /* Action Extension */,
 			);
 		};
 /* End PBXProject section */
@@ -128,6 +207,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D9F03ACB1C80914300372E43 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9F03AD31C80914300372E43 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -140,7 +227,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D9F03AC91C80914300372E43 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9F03AD01C80914300372E43 /* ActionViewController.swift in Sources */,
+				D9F03ADD1C809D4A00372E43 /* ItemProviderTableViewCell.swift in Sources */,
+				D9F03ADF1C80D42A00372E43 /* ItemProviderDetailsViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D9F03AD61C80914300372E43 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D9F03ACC1C80914300372E43 /* Action Extension */;
+			targetProxy = D9F03AD51C80914300372E43 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		D9F03ABB1C808F8000372E43 /* Main.storyboard */ = {
@@ -157,6 +262,14 @@
 				D9F03AC11C808F8000372E43 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		D9F03AD11C80914300372E43 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D9F03AD21C80914300372E43 /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -249,6 +362,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = "Share Sheet Debugger/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.yetii.Share-Sheet-Debugger";
@@ -260,10 +374,33 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = "Share Sheet Debugger/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "net.yetii.Share-Sheet-Debugger";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		D9F03AD91C80914300372E43 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "Action Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.yetii.Share-Sheet-Debugger.Action-Extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		D9F03ADA1C80914300372E43 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "Action Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.yetii.Share-Sheet-Debugger.Action-Extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -284,6 +421,14 @@
 			buildConfigurations = (
 				D9F03AC71C808F8000372E43 /* Debug */,
 				D9F03AC81C808F8000372E43 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		D9F03AD81C80914300372E43 /* Build configuration list for PBXNativeTarget "Action Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D9F03AD91C80914300372E43 /* Debug */,
+				D9F03ADA1C80914300372E43 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
