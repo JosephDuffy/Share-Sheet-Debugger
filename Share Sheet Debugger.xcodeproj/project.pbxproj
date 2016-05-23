@@ -13,6 +13,8 @@
 		D924D99E1CF3584D00067E69 /* DisplayTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D924D99D1CF3584D00067E69 /* DisplayTextViewController.swift */; };
 		D924D9A01CF3702100067E69 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D924D99F1CF3702100067E69 /* AVFoundation.framework */; };
 		D924D9A21CF3702400067E69 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D924D9A11CF3702400067E69 /* AVKit.framework */; };
+		D924D9A41CF3743D00067E69 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D924D9A31CF3743D00067E69 /* Contacts.framework */; };
+		D924D9A61CF3744600067E69 /* ContactsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D924D9A51CF3744600067E69 /* ContactsUI.framework */; };
 		D9E822051CF31910001F51F4 /* ItemProviderTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E822041CF31910001F51F4 /* ItemProviderTableViewController.swift */; };
 		D9F03AB81C808F8000372E43 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F03AB71C808F8000372E43 /* AppDelegate.swift */; };
 		D9F03ABA1C808F8000372E43 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F03AB91C808F8000372E43 /* ViewController.swift */; };
@@ -59,6 +61,8 @@
 		D924D99D1CF3584D00067E69 /* DisplayTextViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayTextViewController.swift; sourceTree = "<group>"; };
 		D924D99F1CF3702100067E69 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D924D9A11CF3702400067E69 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		D924D9A31CF3743D00067E69 /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
+		D924D9A51CF3744600067E69 /* ContactsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ContactsUI.framework; path = System/Library/Frameworks/ContactsUI.framework; sourceTree = SDKROOT; };
 		D9E822041CF31910001F51F4 /* ItemProviderTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemProviderTableViewController.swift; sourceTree = "<group>"; };
 		D9F03AB41C808F8000372E43 /* Share Sheet Debugger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Share Sheet Debugger.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9F03AB71C808F8000372E43 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -89,6 +93,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D924D9A61CF3744600067E69 /* ContactsUI.framework in Frameworks */,
+				D924D9A41CF3743D00067E69 /* Contacts.framework in Frameworks */,
 				D924D9A21CF3702400067E69 /* AVKit.framework in Frameworks */,
 				D924D9A01CF3702100067E69 /* AVFoundation.framework in Frameworks */,
 				D924D99B1CF3554900067E69 /* SafariServices.framework in Frameworks */,
@@ -101,6 +107,8 @@
 		D924D99C1CF3555000067E69 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D924D9A51CF3744600067E69 /* ContactsUI.framework */,
+				D924D9A31CF3743D00067E69 /* Contacts.framework */,
 				D924D9A11CF3702400067E69 /* AVKit.framework */,
 				D924D99F1CF3702100067E69 /* AVFoundation.framework */,
 				D924D99A1CF3554900067E69 /* SafariServices.framework */,

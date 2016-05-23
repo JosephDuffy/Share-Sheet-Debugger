@@ -10,6 +10,9 @@ import UIKit
 import SafariServices
 import AVFoundation
 import AVKit
+import Contacts
+import ContactsUI
+import MobileCoreServices
 
 class ItemProviderTableViewController: UITableViewController {
     var dataSource: ItemProviderTableViewDataSource? {
@@ -78,7 +81,7 @@ class ItemProviderTableViewController: UITableViewController {
                 displayItemImage(image)
                 completion?(nil)
             } else if let url = item as? NSURL {
-                displayItemURL(url)
+                displayItemURL(url, typeIdentifier: typeIdentifier)
                 completion?(nil)
             } else if let data = item as? NSData {
                 decodeAndDisplayItemData(data)
@@ -113,68 +116,112 @@ class ItemProviderTableViewController: UITableViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
 
-    private func decodeAndDisplayItemData(data: NSData) {
+    private func decodeData(data: NSData) -> AnyObject? {
+        if #available(iOSApplicationExtension 9.0, *) {
+            if let contacts = try? CNContactVCardSerialization.contactsWithData(data) where contacts.count > 0 {
+                return contacts.first
+            }
+        }
+
         if let image = UIImage(data: data) {
-            displayItemImage(image)
+            return image
         } else if let text = String(data: data, encoding: NSUTF8StringEncoding) {
-            displayItemText(text)
+            return text
+        } else {
+            return nil
+        }
+    }
+
+    private func decodeAndDisplayItemData(data: NSData) {
+        if let item = decodeData(data) {
+            if #available(iOSApplicationExtension 9.0, *) {
+                if let contact = item as? CNContact {
+                    self.displayContact(contact)
+                    return
+                }
+            }
+
+            if let image = item as? UIImage {
+                displayItemImage(image)
+            } else if let text = item as? String {
+                displayItemText(text)
+            } else {
+                displayItemText(data.description)
+            }
         } else {
             displayItemText(data.description)
         }
     }
 
-    private func displayItemURL(url: NSURL) {
+    private func displayItemURL(url: NSURL, typeIdentifier: String) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { [weak self] in
-            let player = AVPlayer(URL: url)
+            if UTTypeConformsTo(typeIdentifier as CFString, kUTTypeMovie) {
+                let player = AVPlayer(URL: url)
 
-            if player.error == nil {
-                let playerVC = AVPlayerViewController()
-                playerVC.player = player
-                dispatch_async(dispatch_get_main_queue()) {
-                    guard let `self` = self else { return }
-                    self.presentViewController(playerVC, animated: true, completion: nil)
-                }
-            } else if let data = NSData(contentsOfURL: url) {
-                if let image = UIImage(data: data) {
+                if player.error == nil {
+                    let playerVC = AVPlayerViewController()
+                    playerVC.player = player
                     dispatch_async(dispatch_get_main_queue()) {
                         guard let `self` = self else { return }
-
-                        self.displayItemImage(image)
+                        self.presentViewController(playerVC, animated: true, completion: nil)
                     }
-                } else {
-                    dispatch_async(dispatch_get_main_queue()) {
-                        guard let `self` = self else { return }
+                    return
+                }
+            }
 
-                        func showCopyURLAlert() {
-                            let alert = UIAlertController(title: "Can't Open URL", message: "The URL cannot be opened. Copy to clipboard? \(url.absoluteString)", preferredStyle: .Alert)
-                            alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-                            alert.addAction(UIAlertAction(title: "Copy", style: .Default, handler: { (_) in
-                                UIPasteboard.generalPasteboard().string = url.absoluteString
-                            }))
-                            self.presentViewController(alert, animated: true, completion: nil)
-                        }
+            if let data = NSData(contentsOfURL: url) {
+                guard let `self` = self else { return }
 
-                        func trySystemOpenURL() {
-                            if let extensionContext = self.extensionContext {
-                                extensionContext.openURL(url, completionHandler: { (complete) in
-                                    if !complete {
-                                        showCopyURLAlert()
-                                    }
-                                })
-                            } else {
-                                showCopyURLAlert()
+                if let item = self.decodeData(data) {
+                    if #available(iOSApplicationExtension 9.0, *) {
+                        if let contact = item as? CNContact {
+                            dispatch_async(dispatch_get_main_queue()) {
+                                self.displayContact(contact)
                             }
-                        }
 
-                        if url.scheme == "http" || url.scheme == "https" {
-                            if #available(iOSApplicationExtension 9.0, *) {
-                                let safariVC = SFSafariViewController(URL: url)
-                                self.presentViewController(safariVC, animated: true, completion: nil)
+                            return
+                        }
+                    }
+                    
+                    if let image = item as? UIImage {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.displayItemImage(image)
+                        }
+                    } else {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            func showCopyURLAlert() {
+                                let alert = UIAlertController(title: "Can't Open URL", message: "The URL cannot be opened. Copy to clipboard? \(url.absoluteString)", preferredStyle: .Alert)
+                                alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+                                alert.addAction(UIAlertAction(title: "Copy", style: .Default, handler: { (_) in
+                                    UIPasteboard.generalPasteboard().string = url.absoluteString
+                                }))
+                                self.presentViewController(alert, animated: true, completion: nil)
+                            }
+
+                            func trySystemOpenURL() {
+                                if let extensionContext = self.extensionContext {
+                                    extensionContext.openURL(url, completionHandler: { (complete) in
+                                        if !complete {
+                                            dispatch_async(dispatch_get_main_queue()) {
+                                                showCopyURLAlert()
+                                            }
+                                        }
+                                    })
+                                } else {
+                                    showCopyURLAlert()
+                                }
+                            }
+
+                            if url.scheme == "http" || url.scheme == "https" {
+                                if #available(iOSApplicationExtension 9.0, *) {
+                                    let safariVC = SFSafariViewController(URL: url)
+                                    self.presentViewController(safariVC, animated: true, completion: nil)
+                                } else {
+                                    trySystemOpenURL()
+                                }
                             } else {
                                 trySystemOpenURL()
                             }
-                        } else {
-                            trySystemOpenURL()
                         }
                     }
                 }
@@ -182,24 +229,24 @@ class ItemProviderTableViewController: UITableViewController {
                 print("Failed to load anything from URL")
             }
         }
+    }
 
-        if url.scheme == "http" || url.scheme == "https" {
-            if #available(iOSApplicationExtension 9.0, *) {
-                let safariVC = SFSafariViewController(URL: url)
-                self.presentViewController(safariVC, animated: true, completion: nil)
-            } else {
-                // Fallback on earlier versions
-            }
-        } else {
-            print("Opening URL: \(url)")
-            self.extensionContext?.openURL(url, completionHandler: { (complete) in
-                print("Opened URL: \(complete)")
-            })
-        }
+    @available(iOS 9.0, *)
+    private func displayContact(contact: CNContact) {
+        let vc = CNContactViewController(forContact: contact)
+        vc.delegate = self
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     private func displayItemText(text: String) {
         let vc = DisplayTextViewController(text: text)
         navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+@available(iOSApplicationExtension 9.0, *)
+extension ItemProviderTableViewController: CNContactViewControllerDelegate {
+    func contactViewController(viewController: CNContactViewController, didCompleteWithContact contact: CNContact?) {
+        navigationController?.popViewControllerAnimated(true)
     }
 }
