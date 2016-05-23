@@ -2,9 +2,16 @@
 
 Share Sheet Debugger (SSD for short) is a project built with the aim of aiding the development of sharing content within iOS applications. It does this by providing in-depth information about the data being shared, allowing developers to see how iOS shares the data provided by the application, and also allows developers to see how others have formatted their shared data.
 
-##Goals
+##Features
 
- - [ ] Detect and show shared locations (via contact cards)
+ - [X] Support for mutliple shared items
+ - [X] Support for mutliple data types per item (e.g., an image and it description as text)
+ - [ ] Detect and display various data types:
+ 	- [X] Images
+ 	- [X] Text
+ 	- [X] Videos
+ 	- [X] Contact Cards
+ 	- [ ] Locations (via contact cards)
  - [ ] Provide a method of displaying the raw data/text of a shared item
  - [ ] Add some example items to the iOS application
  	- [ ] An image
