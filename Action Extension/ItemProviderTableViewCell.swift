@@ -37,7 +37,13 @@ class ItemProviderTableViewCell: UITableViewCell {
             accessoryType = .DisclosureIndicator
         } else if let rawTypeIdentifier = itemProvider.registeredTypeIdentifiers.first as? String where typeIdentifiersCount == 1 {
             let typeIdentifier = ItemProviderTypeIndentifier(rawValue: rawTypeIdentifier)
-            textLabel?.text = typeIdentifier.descriptor()
+            switch typeIdentifier {
+            case .Unknown:
+                textLabel?.text = typeIdentifier.rawValue
+            default:
+                textLabel?.text = typeIdentifier.descriptor()
+            }
+            
             accessoryType = .DisclosureIndicator
 
             itemProvider.loadItemForTypeIdentifier(rawTypeIdentifier, options: nil, completionHandler: { [weak self] (item, error) -> Void in

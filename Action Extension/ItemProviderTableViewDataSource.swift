@@ -30,7 +30,7 @@ class ItemProviderTableViewDataSource: NSObject, UITableViewDataSource {
             return 2
         default:
             // Specific type identifier
-            return 3
+            return 4
         }
     }
 
@@ -112,7 +112,7 @@ class ItemProviderTableViewDataSource: NSObject, UITableViewDataSource {
                 return cell
             case 2:
                 let cell = UITableViewCell(style: .Value1, reuseIdentifier: nil)
-                cell.textLabel?.text = "Data Type"
+                cell.textLabel?.text = "Object Type"
                 cell.selectionStyle = .None
 
                 let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
@@ -145,6 +145,12 @@ class ItemProviderTableViewDataSource: NSObject, UITableViewDataSource {
                         }
                     }
                     })
+                return cell
+            case 3:
+                let cell = UITableViewCell(style: .Default, reuseIdentifier: nil)
+                cell.textLabel?.text = "View Data"
+                cell.accessoryType = .DisclosureIndicator
+                cell.textLabel?.textColor = UIButton().tintColor
                 return cell
             default:
                 fatalError("Cannot retrieve cell for index path: \(indexPath)")
