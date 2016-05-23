@@ -8,6 +8,8 @@
 
 import UIKit
 import SafariServices
+import AVFoundation
+import AVKit
 
 class ItemProviderTableViewController: UITableViewController {
     var dataSource: ItemProviderTableViewDataSource? {
@@ -123,7 +125,16 @@ class ItemProviderTableViewController: UITableViewController {
 
     private func displayItemURL(url: NSURL) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { [weak self] in
-            if let data = NSData(contentsOfURL: url) {
+            let player = AVPlayer(URL: url)
+
+            if player.error == nil {
+                let playerVC = AVPlayerViewController()
+                playerVC.player = player
+                dispatch_async(dispatch_get_main_queue()) {
+                    guard let `self` = self else { return }
+                    self.presentViewController(playerVC, animated: true, completion: nil)
+                }
+            } else if let data = NSData(contentsOfURL: url) {
                 if let image = UIImage(data: data) {
                     dispatch_async(dispatch_get_main_queue()) {
                         guard let `self` = self else { return }
@@ -134,23 +145,16 @@ class ItemProviderTableViewController: UITableViewController {
                     dispatch_async(dispatch_get_main_queue()) {
                         guard let `self` = self else { return }
 
-                        if url.scheme == "http" || url.scheme == "https" {
-                            if #available(iOSApplicationExtension 9.0, *) {
-                                let safariVC = SFSafariViewController(URL: url)
-                                self.presentViewController(safariVC, animated: true, completion: nil)
-                            } else {
-                                // Fallback on earlier versions
-                            }
-                        } else {
-                            func showCopyURLAlert() {
-                                let alert = UIAlertController(title: "Can't open", message: "The URL cannot be opened. Copy to clipboard? \(url.absoluteString)", preferredStyle: .Alert)
-                                alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-                                alert.addAction(UIAlertAction(title: "Copy", style: .Default, handler: { (_) in
-                                    UIPasteboard.generalPasteboard().string = url.absoluteString
-                                }))
-                                self.presentViewController(alert, animated: true, completion: nil)
-                            }
+                        func showCopyURLAlert() {
+                            let alert = UIAlertController(title: "Can't Open URL", message: "The URL cannot be opened. Copy to clipboard? \(url.absoluteString)", preferredStyle: .Alert)
+                            alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+                            alert.addAction(UIAlertAction(title: "Copy", style: .Default, handler: { (_) in
+                                UIPasteboard.generalPasteboard().string = url.absoluteString
+                            }))
+                            self.presentViewController(alert, animated: true, completion: nil)
+                        }
 
+                        func trySystemOpenURL() {
                             if let extensionContext = self.extensionContext {
                                 extensionContext.openURL(url, completionHandler: { (complete) in
                                     if !complete {
@@ -160,6 +164,17 @@ class ItemProviderTableViewController: UITableViewController {
                             } else {
                                 showCopyURLAlert()
                             }
+                        }
+
+                        if url.scheme == "http" || url.scheme == "https" {
+                            if #available(iOSApplicationExtension 9.0, *) {
+                                let safariVC = SFSafariViewController(URL: url)
+                                self.presentViewController(safariVC, animated: true, completion: nil)
+                            } else {
+                                trySystemOpenURL()
+                            }
+                        } else {
+                            trySystemOpenURL()
                         }
                     }
                 }
