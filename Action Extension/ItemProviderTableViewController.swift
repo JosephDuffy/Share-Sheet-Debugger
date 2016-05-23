@@ -88,6 +88,7 @@ class ItemProviderTableViewController: UITableViewController {
                 completion?(nil)
             } else if let text = item as? String {
                 displayItemText(text)
+                completion?(nil)
             } else {
                 print("Item unknown")
                 print(item)
