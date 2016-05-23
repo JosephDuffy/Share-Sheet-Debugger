@@ -12,61 +12,62 @@ import MobileCoreServices
 class ItemProviderTableViewCell: UITableViewCell {
     static let resuseIdentifier = "ItemProviderTableViewCell"
 
-    private(set) var itemProvider: NSItemProvider?
-    private(set) var typeIdentifier: String?
+    var itemProvider: NSItemProvider? {
+        didSet {
+            setupForItemProvider()
+        }
+    }
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .Value1, reuseIdentifier: reuseIdentifier)
-
-        accessoryType = .DisclosureIndicator
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setItemProvider(itemProvider: NSItemProvider, typeIdentifier: String) {
-        self.itemProvider = itemProvider
-        self.typeIdentifier = typeIdentifier
-        setupForItemProvider()
-    }
-
     private func setupForItemProvider() {
         guard let itemProvider = self.itemProvider else {
             return
         }
-        guard let typeIdentifier = self.typeIdentifier else {
-            return
-        }
 
-        textLabel?.text = typeIdentifier
+        let typeIdentifiersCount = itemProvider.registeredTypeIdentifiers.count
+        if typeIdentifiersCount > 1 {
+            textLabel?.text = "\(typeIdentifiersCount) Types"
+            accessoryType = .DisclosureIndicator
+        } else if let rawTypeIdentifier = itemProvider.registeredTypeIdentifiers.first as? String where typeIdentifiersCount == 1 {
+            let typeIdentifier = ItemProviderTypeIndentifier(rawValue: rawTypeIdentifier)
+            textLabel?.text = typeIdentifier.descriptor()
+            accessoryType = .DisclosureIndicator
 
-        itemProvider.loadItemForTypeIdentifier(typeIdentifier as String, options: nil, completionHandler: { [weak self] (item, error) -> Void in
-            guard let `self` = self else { return }
+            itemProvider.loadItemForTypeIdentifier(rawTypeIdentifier, options: nil, completionHandler: { [weak self] (item, error) -> Void in
+                guard let `self` = self else { return }
 
-            if let error = error {
-                print("Error: \(error)")
-                return
-            }
-
-            guard let item = item else {
-                return
-            }
-
-            NSOperationQueue.mainQueue().addOperationWithBlock {
-                if let item = item as? NSURL {
-                    self.textLabel?.text = "NSURL"
-                    self.detailTextLabel?.text = item.absoluteString
-                } else if let item = item as? String {
-                    self.textLabel?.text = "String"
-                    self.detailTextLabel?.text = item
-                } else if item is NSData {
-                    self.detailTextLabel?.text = "NSData"
-                } else {
-                    self.detailTextLabel?.text = "Unknown"
+                if let error = error {
+                    print("Error: \(error)")
+                    return
                 }
-            }
-        })
+
+                guard let item = item else {
+                    return
+                }
+
+                NSOperationQueue.mainQueue().addOperationWithBlock {
+                    if item is NSURL {
+                        self.detailTextLabel?.text = "NSURL"
+                    } else if item is String {
+                        self.detailTextLabel?.text = "String"
+                    } else if item is NSData {
+                        self.detailTextLabel?.text = "NSData"
+                    } else {
+                        self.detailTextLabel?.text = "Unknown"
+                    }
+                }
+            })
+        } else {
+            textLabel?.text = "Error loading identifiers"
+            accessoryType = .DisclosureIndicator
+        }
     }
 
 }

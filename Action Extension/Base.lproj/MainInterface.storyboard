@@ -5,7 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
-        <!--Action View Controller-->
+        <!--Shared Items-->
         <scene sceneID="mWx-HI-5YQ">
             <objects>
                 <tableViewController id="Aje-QS-dCT" customClass="ActionViewController" customModule="Action_Extension" customModuleProvider="target" sceneMemberID="viewController">
@@ -18,7 +18,7 @@
                             <outlet property="delegate" destination="Aje-QS-dCT" id="HMR-eR-QfY"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="9kb-P7-5hL">
+                    <navigationItem key="navigationItem" title="Shared Items" id="9kb-P7-5hL">
                         <barButtonItem key="rightBarButtonItem" title="Done" style="done" id="WYi-yp-eM6">
                             <connections>
                                 <action selector="done" destination="Aje-QS-dCT" id="omz-a6-VE0"/>
@@ -26,48 +26,31 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <segue destination="8Sy-bg-Opa" kind="push" identifier="ShowItemProviderDetail" id="hpn-JD-0AQ"/>
+                        <segue destination="g1h-78-Kxg" kind="push" identifier="ShowItemProviderDetail" id="Ph5-Eb-Wwx"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BN2-VN-XGy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1161" y="-118"/>
         </scene>
-        <!--Item Provider Details View Controller-->
-        <scene sceneID="AVm-fE-59H">
+        <!--Item Attachment-->
+        <scene sceneID="SHp-4Q-rex">
             <objects>
-                <viewController id="8Sy-bg-Opa" customClass="ItemProviderDetailsViewController" customModule="Action_Extension" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="dyH-EQ-o0v"/>
-                        <viewControllerLayoutGuide type="bottom" id="hfE-VH-G5H"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="dFu-FG-ao8">
+                <tableViewController id="g1h-78-Kxg" customClass="ItemProviderTableViewController" customModule="Action_Extension" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="u8i-pn-qBZ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="rPY-BK-g0F">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="rPY-BK-g0F" firstAttribute="leading" secondItem="dFu-FG-ao8" secondAttribute="leading" id="5VJ-Dx-ooK"/>
-                            <constraint firstItem="rPY-BK-g0F" firstAttribute="top" secondItem="dFu-FG-ao8" secondAttribute="top" id="alT-iI-Izj"/>
-                            <constraint firstAttribute="trailing" secondItem="rPY-BK-g0F" secondAttribute="trailing" id="iwg-fb-GEc"/>
-                            <constraint firstItem="hfE-VH-G5H" firstAttribute="top" secondItem="rPY-BK-g0F" secondAttribute="bottom" id="q9y-W0-TVE"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="TIW-i8-YKY"/>
-                    <connections>
-                        <outlet property="textView" destination="rPY-BK-g0F" id="k1O-FM-UZB"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="gAG-DD-Frm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <connections>
+                            <outlet property="dataSource" destination="g1h-78-Kxg" id="Ata-nV-41m"/>
+                            <outlet property="delegate" destination="g1h-78-Kxg" id="qay-5V-5Yd"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Item Attachment" id="7sH-yF-f0n"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pXe-4F-rR3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1650" y="-118"/>
+            <point key="canvasLocation" x="1625" y="-118"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="KsD-eC-FUI">

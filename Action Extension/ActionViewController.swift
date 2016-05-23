@@ -13,52 +13,74 @@ let ShowItemProviderDetailSegue = "ShowItemProviderDetail"
 
 class ActionViewController: UITableViewController {
 
-    private(set) var itemProviders: [NSItemProvider] = []
+    private(set) var items: [NSExtensionItem] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         tableView.registerClass(ItemProviderTableViewCell.self, forCellReuseIdentifier: ItemProviderTableViewCell.resuseIdentifier)
 
-        guard let inputItems = extensionContext?.inputItems as? [NSExtensionItem] else {
+        guard let extensionContext = extensionContext else {
+            let alert = UIAlertController(title: "Error", message: "Extension context shouldn't be nil", preferredStyle: .Alert)
+            presentViewController(alert, animated: true, completion: nil)
             return
         }
 
-        for inputItem in inputItems {
-            guard let itemProviders = inputItem.attachments as? [NSItemProvider] else {
-                continue
+        guard let inputItems = extensionContext.inputItems as? [NSExtensionItem] else {
+            let alert = UIAlertController(title: "Error", message: "Failed to cast input items to [NSExtensionItem]", preferredStyle: .Alert)
+            presentViewController(alert, animated: true, completion: nil)
+            return
+        }
+
+        for (itemIndex, inputItem) in inputItems.enumerate() {
+            items.append(inputItem)
+
+            tableView.beginUpdates()
+
+            tableView.insertSections(NSIndexSet(index: itemIndex), withRowAnimation: .Automatic)
+
+            if let itemProviders = inputItem.attachments as? [NSItemProvider] {
+                for itemIndex in 0..<itemProviders.count {
+                    tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: itemIndex, inSection: itemIndex)], withRowAnimation: .Automatic)
+                }
+            } else {
+                tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: itemIndex)], withRowAnimation: .Automatic)
             }
 
-            print(inputItem)
-
-            for (index, itemProvider) in itemProviders.enumerate() {
-                print(itemProvider)
-                
-                tableView.beginUpdates()
-                self.itemProviders.append(itemProvider)
-                tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: self.itemProviders.count - 1)], withRowAnimation: .Automatic)
-                tableView.endUpdates()
-            }
+            tableView.endUpdates()
         }
     }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return itemProviders.count
+        return items.count
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return itemProviders[section].registeredTypeIdentifiers.count
+        return (items[section].attachments as? [NSItemProvider])?.count ?? 1
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let itemProvider = itemProviders[indexPath.section]
-        let typeIdentifier = itemProvider.registeredTypeIdentifiers[indexPath.row] as! String
+        let item = items[indexPath.section]
 
-        let cell = tableView.dequeueReusableCellWithIdentifier(ItemProviderTableViewCell.resuseIdentifier, forIndexPath: indexPath) as! ItemProviderTableViewCell
+        if let itemProviders = item.attachments as? [NSItemProvider] where itemProviders.count > indexPath.row {
+            let itemProvider = itemProviders[indexPath.row]
 
-        cell.setItemProvider(itemProvider, typeIdentifier: typeIdentifier)
+            let cell = tableView.dequeueReusableCellWithIdentifier(ItemProviderTableViewCell.resuseIdentifier, forIndexPath: indexPath) as! ItemProviderTableViewCell
 
-        return cell
+            cell.itemProvider = itemProvider
+            
+            return cell
+        } else {
+            let cell = UITableViewCell(style: .Default, reuseIdentifier: nil)
+            cell.textLabel?.text = "Error loading item attachements"
+            return cell
+        }
+    }
+
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let item = items[section]
+
+        return item.attributedTitle?.string ?? "Item \(section + 1)"
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -67,15 +89,12 @@ class ActionViewController: UITableViewController {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == ShowItemProviderDetailSegue {
-            guard let cell = sender as? ItemProviderTableViewCell else {
-                return
-            }
+            guard let cell = sender as? ItemProviderTableViewCell else { return }
+            guard let itemProvider = cell.itemProvider else { return }
+            guard let tableViewController = segue.destinationViewController as? ItemProviderTableViewController else { return }
 
-            guard let itemProviderDetailsViewController = segue.destinationViewController as? ItemProviderDetailsViewController else {
-                return
-            }
-
-            itemProviderDetailsViewController.setItemProvider(cell.itemProvider!, typeIdentifier: cell.typeIdentifier!)
+            let dataSource = ItemProviderTableViewDataSource(itemProvider: itemProvider)
+            tableViewController.dataSource = dataSource
         }
     }
 

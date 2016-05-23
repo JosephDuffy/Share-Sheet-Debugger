@@ -20,7 +20,7 @@ class ItemProviderDetailsViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
 
-    func setItemProvider(itemProvider: NSItemProvider, typeIdentifier: String) {
+    func setItemProvider(itemProvider: NSItemProvider, typeIdentifier: String?) {
         self.itemProvider = itemProvider
         self.typeIdentifier = typeIdentifier
         setupForItemProvider()
