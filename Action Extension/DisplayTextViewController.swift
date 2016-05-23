@@ -18,8 +18,6 @@ class DisplayTextViewController: UIViewController {
         return textView
     }()
 
-    private var topConstraint: NSLayoutConstraint?
-
     init(text: String) {
         self.text = text
 
@@ -34,20 +32,11 @@ class DisplayTextViewController: UIViewController {
         setupForText()
     }
 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-        topConstraint?.constant = topLayoutGuide.length
-    }
-
     private func setupForText() {
         view.addSubview(textView)
 
-        let topConstraint = NSLayoutConstraint(item: textView, attribute: .Top, relatedBy: .Equal, toItem: view, attribute: .Top, multiplier: 1, constant: 0)
-        self.topConstraint = topConstraint
-
         view.addConstraints([
-            topConstraint,
+            NSLayoutConstraint(item: textView, attribute: .Top, relatedBy: .Equal, toItem: view, attribute: .Top, multiplier: 1, constant: 0),
             NSLayoutConstraint(item: textView, attribute: .Right, relatedBy: .Equal, toItem: view, attribute: .Right, multiplier: 1, constant: 0),
             NSLayoutConstraint(item: textView, attribute: .Bottom, relatedBy: .Equal, toItem: view, attribute: .Bottom, multiplier: 1, constant: 0),
             NSLayoutConstraint(item: textView, attribute: .Left, relatedBy: .Equal, toItem: view, attribute: .Left, multiplier: 1, constant: 0),

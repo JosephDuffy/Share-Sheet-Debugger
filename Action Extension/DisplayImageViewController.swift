@@ -23,8 +23,6 @@ class DisplayImageViewController: UIViewController {
         return UIImageView(image: self.image)
     }()
 
-    private var topConstraint: NSLayoutConstraint?
-
     init(image: UIImage) {
         self.image = image
 
@@ -39,12 +37,6 @@ class DisplayImageViewController: UIViewController {
         setupForImage()
     }
 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-        topConstraint?.constant = topLayoutGuide.length
-    }
-
     private func setupForImage() {
         let widthScale = view.frame.size.width / imageView.bounds.width
         let heightScale = view.frame.size.height / imageView.bounds.height
@@ -54,11 +46,8 @@ class DisplayImageViewController: UIViewController {
 
         view.addSubview(scrollView)
 
-        let topConstraint = NSLayoutConstraint(item: scrollView, attribute: .Top, relatedBy: .Equal, toItem: view, attribute: .Top, multiplier: 1, constant: topLayoutGuide.length)
-        self.topConstraint = topConstraint
-
         view.addConstraints([
-            topConstraint,
+            NSLayoutConstraint(item: scrollView, attribute: .Top, relatedBy: .Equal, toItem: view, attribute: .Top, multiplier: 1, constant: topLayoutGuide.length),
             NSLayoutConstraint(item: scrollView, attribute: .Right, relatedBy: .Equal, toItem: view, attribute: .Right, multiplier: 1, constant: 0),
             NSLayoutConstraint(item: scrollView, attribute: .Bottom, relatedBy: .Equal, toItem: view, attribute: .Bottom, multiplier: 1, constant: 0),
             NSLayoutConstraint(item: scrollView, attribute: .Left, relatedBy: .Equal, toItem: view, attribute: .Left, multiplier: 1, constant: 0),
