@@ -18,80 +18,80 @@ class ActionViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.registerClass(ItemProviderTableViewCell.self, forCellReuseIdentifier: ItemProviderTableViewCell.resuseIdentifier)
+        tableView.register(ItemProviderTableViewCell.self, forCellReuseIdentifier: ItemProviderTableViewCell.resuseIdentifier)
 
         guard let extensionContext = extensionContext else {
-            let alert = UIAlertController(title: "Error", message: "Extension context shouldn't be nil", preferredStyle: .Alert)
-            presentViewController(alert, animated: true, completion: nil)
+            let alert = UIAlertController(title: "Error", message: "Extension context shouldn't be nil", preferredStyle: .alert)
+            present(alert, animated: true, completion: nil)
             return
         }
 
         guard let inputItems = extensionContext.inputItems as? [NSExtensionItem] else {
-            let alert = UIAlertController(title: "Error", message: "Failed to cast input items to [NSExtensionItem]", preferredStyle: .Alert)
-            presentViewController(alert, animated: true, completion: nil)
+            let alert = UIAlertController(title: "Error", message: "Failed to cast input items to [NSExtensionItem]", preferredStyle: .alert)
+            present(alert, animated: true, completion: nil)
             return
         }
 
-        for (itemIndex, inputItem) in inputItems.enumerate() {
+        for (itemIndex, inputItem) in inputItems.enumerated() {
             items.append(inputItem)
 
             tableView.beginUpdates()
 
-            tableView.insertSections(NSIndexSet(index: itemIndex), withRowAnimation: .Automatic)
+            tableView.insertSections(NSIndexSet(index: itemIndex) as IndexSet, with: .automatic)
 
-            if let itemProviders = inputItem.attachments as? [NSItemProvider] {
+            if let itemProviders = inputItem.attachments {
                 for itemIndex in 0..<itemProviders.count {
-                    tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: itemIndex, inSection: itemIndex)], withRowAnimation: .Automatic)
+                    tableView.insertRows(at: [IndexPath(row: itemIndex, section: itemIndex)], with: .automatic)
                 }
             } else {
-                tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: itemIndex)], withRowAnimation: .Automatic)
+                tableView.insertRows(at: [IndexPath(row: 0, section: itemIndex)], with: .automatic)
             }
 
             tableView.endUpdates()
         }
     }
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return items.count
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (items[section].attachments as? [NSItemProvider])?.count ?? 1
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return (items[section].attachments)?.count ?? 1
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = items[indexPath.section]
 
-        if let itemProviders = item.attachments as? [NSItemProvider] where itemProviders.count > indexPath.row {
+        if let itemProviders = item.attachments, itemProviders.count > indexPath.row {
             let itemProvider = itemProviders[indexPath.row]
 
-            let cell = tableView.dequeueReusableCellWithIdentifier(ItemProviderTableViewCell.resuseIdentifier, forIndexPath: indexPath) as! ItemProviderTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: ItemProviderTableViewCell.resuseIdentifier, for: indexPath) as! ItemProviderTableViewCell
 
             cell.itemProvider = itemProvider
             
             return cell
         } else {
-            let cell = UITableViewCell(style: .Default, reuseIdentifier: nil)
+            let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
             cell.textLabel?.text = "Error loading item attachements"
             return cell
         }
     }
 
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let item = items[section]
 
         return item.attributedTitle?.string ?? "Item \(section + 1)"
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        performSegueWithIdentifier(ShowItemProviderDetailSegue, sender: tableView.cellForRowAtIndexPath(indexPath))
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: ShowItemProviderDetailSegue, sender: tableView.cellForRow(at: indexPath as IndexPath))
     }
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == ShowItemProviderDetailSegue {
             guard let cell = sender as? ItemProviderTableViewCell else { return }
             guard let itemProvider = cell.itemProvider else { return }
-            guard let tableViewController = segue.destinationViewController as? ItemProviderTableViewController else { return }
+            guard let tableViewController = segue.destination as? ItemProviderTableViewController else { return }
 
             let dataSource = ItemProviderTableViewDataSource(itemProvider: itemProvider)
             tableViewController.dataSource = dataSource
@@ -101,7 +101,7 @@ class ActionViewController: UITableViewController {
     @IBAction func done() {
         // Return any edited content to the host app.
         // This template doesn't do anything, so we just echo the passed in items.
-        self.extensionContext!.completeRequestReturningItems(self.extensionContext!.inputItems, completionHandler: nil)
+        self.extensionContext!.completeRequest(returningItems: self.extensionContext!.inputItems, completionHandler: nil)
     }
 
 }

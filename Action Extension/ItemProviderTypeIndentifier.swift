@@ -52,28 +52,28 @@ enum ItemProviderTypeIndentifier: RawRepresentable {
     init(rawValue: String) {
         switch rawValue {
         case (kUTTypeItem as String as String):
-            self = Item
+            self = ItemProviderTypeIndentifier.Item
         case (kUTTypeContent as String as String):
-            self = Content
+            self = ItemProviderTypeIndentifier.Content
         case (kUTTypeURL as String as String):
-            self = URL
+            self = ItemProviderTypeIndentifier.URL
         case (kUTTypePlainText as String as String):
-            self = PlainText
+            self = ItemProviderTypeIndentifier.PlainText
         case (kUTTypeImage as String as String):
-            self = Image
+            self = ItemProviderTypeIndentifier.Image
         case (kUTTypeJPEG as String as String):
-            self = JPEG
+            self = ItemProviderTypeIndentifier.JPEG
         case (kUTTypeJPEG2000 as String as String):
-            self = JPEG2000
+            self = ItemProviderTypeIndentifier.JPEG2000
         case (kUTTypePNG as String as String):
-            self = PNG
+            self = ItemProviderTypeIndentifier.PNG
         case (kUTTypeMPEG4 as String as String):
-            self = MPEG4
+            self = ItemProviderTypeIndentifier.MPEG4
         case (kUTTypeVCard as String as String):
-            self = ContactCard
+            self = ItemProviderTypeIndentifier.ContactCard
         // TODO: Add more conversions
         default:
-            self = Unknown(raw: rawValue)
+            self = ItemProviderTypeIndentifier.Unknown(raw: rawValue)
         }
     }
 

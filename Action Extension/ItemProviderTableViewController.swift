@@ -22,7 +22,7 @@ class ItemProviderTableViewController: UITableViewController {
     }
     private(set) var loadedItems: [String : NSSecureCoding] = [:]
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let dataSource = dataSource else { return }
 
         let section = indexPath.section
@@ -34,17 +34,15 @@ class ItemProviderTableViewController: UITableViewController {
         } else if section > 0 && row == 3 {
             let index = section - TypeIdentifiersSectionOffset
 
-            guard let rawTypeIdentifier = dataSource.itemProvider.registeredTypeIdentifiers[index] as? String else {
-                return
-            }
+            let rawTypeIdentifier = dataSource.itemProvider.registeredTypeIdentifiers[index]
 
-            guard let cell = tableView.cellForRowAtIndexPath(indexPath) else { return }
+            guard let cell = tableView.cellForRow(at: indexPath) else { return }
 
-            let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+            let activityIndicator = UIActivityIndicatorView(style: .gray)
             activityIndicator.startAnimating()
             cell.accessoryView = activityIndicator
 
-            showItemForTypeIdentifier(rawTypeIdentifier, fromItemProvider: dataSource.itemProvider, completion: { [weak cell] (error) in
+            showItemForTypeIdentifier(typeIdentifier: rawTypeIdentifier, fromItemProvider: dataSource.itemProvider, completion: { [weak cell] (error) in
                 guard let cell = cell else { return }
 
                 cell.accessoryView = nil
@@ -52,42 +50,42 @@ class ItemProviderTableViewController: UITableViewController {
         }
     }
 
-    private func loadItemForTypeIdentifier(typeIdentifier: String, fromItemProvider itemProvider: NSItemProvider, completion: ((error: ErrorType?, item: NSSecureCoding?) -> Void)?) {
-        itemProvider.loadItemForTypeIdentifier(typeIdentifier, options: nil, completionHandler: { [weak self] (item, error) -> Void in
+    private func loadItemForTypeIdentifier(typeIdentifier: String, fromItemProvider itemProvider: NSItemProvider, completion: ((_ error: Error?, _ item: NSSecureCoding?) -> Void)?) {
+        itemProvider.loadItem(forTypeIdentifier: typeIdentifier, options: nil, completionHandler: { [weak self] (item, error) -> Void in
             if let error = error {
                 print("Error loading item: \(error)")
-                completion?(error: error, item: nil)
+                completion?(error, nil)
                 return
             }
 
             guard let item = item else {
                 let error = NSError(domain: "", code: 0, userInfo: nil)
-                completion?(error: error, item: nil)
+                completion?(error, nil)
                 return
             }
 
-            NSOperationQueue.mainQueue().addOperationWithBlock {
+            OperationQueue.main.addOperation {
                 guard let `self` = self else { return }
 
                 self.loadedItems[typeIdentifier] = item
-                completion?(error: nil, item: item)
+                completion?(nil, item)
             }
         })
     }
 
-    private func showItemForTypeIdentifier(typeIdentifier: String, fromItemProvider itemProvider: NSItemProvider, completion: ((ErrorType?) -> Void)?) {
+    private func showItemForTypeIdentifier(typeIdentifier: String, fromItemProvider itemProvider: NSItemProvider, completion: ((Error?) -> Void)?) {
         func showItem(item: NSSecureCoding) {
             if let image = item as? UIImage {
-                displayItemImage(image)
+                displayItemImage(image: image)
                 completion?(nil)
             } else if let url = item as? NSURL {
-                displayItemURL(url, typeIdentifier: typeIdentifier)
+                displayItemURL(url: url, typeIdentifier: typeIdentifier)
                 completion?(nil)
             } else if let data = item as? NSData {
-                decodeAndDisplayItemData(data)
+                decodeAndDisplayItemData(data: data)
                 completion?(nil)
             } else if let text = item as? String {
-                displayItemText(text)
+                displayItemText(text: text)
                 completion?(nil)
             } else {
                 print("Item unknown")
@@ -97,9 +95,9 @@ class ItemProviderTableViewController: UITableViewController {
         }
 
         if let loadedItem = loadedItems[typeIdentifier as String] {
-            showItem(loadedItem)
+            showItem(item: loadedItem)
         } else {
-            loadItemForTypeIdentifier(typeIdentifier, fromItemProvider: itemProvider, completion: { (error, item) in
+            loadItemForTypeIdentifier(typeIdentifier: typeIdentifier, fromItemProvider: itemProvider, completion: { (error, item) in
                 if let error = error {
                     completion?(error)
                     return
@@ -107,7 +105,7 @@ class ItemProviderTableViewController: UITableViewController {
 
                 guard let item = item else { return }
 
-                showItem(item)
+                showItem(item: item)
             })
         }
     }
@@ -119,65 +117,65 @@ class ItemProviderTableViewController: UITableViewController {
 
     private func decodeData(data: NSData) -> AnyObject? {
         if #available(iOSApplicationExtension 9.0, *) {
-            if let contacts = try? CNContactVCardSerialization.contactsWithData(data) where contacts.count > 0 {
+            if let contacts = try? CNContactVCardSerialization.contacts(with: data as Data), contacts.count > 0 {
                 return contacts.first
             }
         }
 
-        if let image = UIImage(data: data) {
+        if let image = UIImage(data: data as Data) {
             return image
-        } else if let text = String(data: data, encoding: NSUTF8StringEncoding) {
-            return text
+        } else if let text = String(data: data as Data, encoding: String.Encoding.utf8) {
+            return text as AnyObject
         } else {
             return nil
         }
     }
 
     private func decodeAndDisplayItemData(data: NSData) {
-        if let item = decodeData(data) {
+        if let item = decodeData(data: data) {
             if #available(iOSApplicationExtension 9.0, *) {
                 if let contact = item as? CNContact {
-                    self.displayContact(contact)
+                    self.displayContact(contact: contact)
                     return
                 }
             }
 
             if let image = item as? UIImage {
-                displayItemImage(image)
+                displayItemImage(image: image)
             } else if let text = item as? String {
-                displayItemText(text)
+                displayItemText(text: text)
             } else {
-                displayItemText(data.description)
+                displayItemText(text: data.description)
             }
         } else {
-            displayItemText(data.description)
+            displayItemText(text: data.description)
         }
     }
 
     private func displayItemURL(url: NSURL, typeIdentifier: String) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { [weak self] in
+        DispatchQueue.global().async { [weak self] in
             if UTTypeConformsTo(typeIdentifier as CFString, kUTTypeMovie) {
-                let player = AVPlayer(URL: url)
+                let player = AVPlayer(url: url as URL)
 
                 if player.error == nil {
                     let playerVC = AVPlayerViewController()
                     playerVC.player = player
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         guard let `self` = self else { return }
-                        self.presentViewController(playerVC, animated: true, completion: nil)
+                        self.present(playerVC, animated: true, completion: nil)
                     }
                     return
                 }
             }
 
-            if let data = NSData(contentsOfURL: url) {
+            if let data = NSData(contentsOf: url as URL) {
                 guard let `self` = self else { return }
 
-                if let item = self.decodeData(data) {
+                if let item = self.decodeData(data: data) {
                     if #available(iOSApplicationExtension 9.0, *) {
                         if let contact = item as? CNContact {
-                            dispatch_async(dispatch_get_main_queue()) {
-                                self.displayContact(contact)
+                            DispatchQueue.main.async {
+                                self.displayContact(contact: contact)
                             }
 
                             return
@@ -185,25 +183,25 @@ class ItemProviderTableViewController: UITableViewController {
                     }
                     
                     if let image = item as? UIImage {
-                        dispatch_async(dispatch_get_main_queue()) {
-                            self.displayItemImage(image)
+                        DispatchQueue.main.async {
+                            self.displayItemImage(image: image)
                         }
                     } else {
-                        dispatch_async(dispatch_get_main_queue()) {
+                        DispatchQueue.main.async {
                             func showCopyURLAlert() {
-                                let alert = UIAlertController(title: "Can't Open URL", message: "The URL cannot be opened. Copy to clipboard? \(url.absoluteString)", preferredStyle: .Alert)
-                                alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-                                alert.addAction(UIAlertAction(title: "Copy", style: .Default, handler: { (_) in
-                                    UIPasteboard.generalPasteboard().string = url.absoluteString
+                                let alert = UIAlertController(title: "Can't Open URL", message: "The URL cannot be opened. Copy to clipboard? \(url.absoluteString)", preferredStyle: .alert)
+                                alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+                                alert.addAction(UIAlertAction(title: "Copy", style: .default, handler: { (_) in
+                                    UIPasteboard.general.string = url.absoluteString
                                 }))
-                                self.presentViewController(alert, animated: true, completion: nil)
+                                self.present(alert, animated: true, completion: nil)
                             }
 
                             func trySystemOpenURL() {
                                 if let extensionContext = self.extensionContext {
-                                    extensionContext.openURL(url, completionHandler: { (complete) in
+                                    extensionContext.open(url as URL, completionHandler: { (complete) in
                                         if !complete {
-                                            dispatch_async(dispatch_get_main_queue()) {
+                                            DispatchQueue.main.async {
                                                 showCopyURLAlert()
                                             }
                                         }
@@ -215,8 +213,8 @@ class ItemProviderTableViewController: UITableViewController {
 
                             if url.scheme == "http" || url.scheme == "https" {
                                 if #available(iOSApplicationExtension 9.0, *) {
-                                    let safariVC = SFSafariViewController(URL: url)
-                                    self.presentViewController(safariVC, animated: true, completion: nil)
+                                    let safariVC = SFSafariViewController(url: url as URL)
+                                    self.present(safariVC, animated: true, completion: nil)
                                 } else {
                                     trySystemOpenURL()
                                 }
@@ -234,7 +232,7 @@ class ItemProviderTableViewController: UITableViewController {
 
     @available(iOS 9.0, *)
     private func displayContact(contact: CNContact) {
-        let vc = CNContactViewController(forContact: contact)
+        let vc = CNContactViewController(for: contact)
         vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -247,7 +245,7 @@ class ItemProviderTableViewController: UITableViewController {
 
 @available(iOSApplicationExtension 9.0, *)
 extension ItemProviderTableViewController: CNContactViewControllerDelegate {
-    func contactViewController(viewController: CNContactViewController, didCompleteWithContact contact: CNContact?) {
-        navigationController?.popViewControllerAnimated(true)
+    func contactViewController(_ viewController: CNContactViewController, didCompleteWith contact: CNContact?) {
+        navigationController?.popViewController(animated: true)
     }
 }

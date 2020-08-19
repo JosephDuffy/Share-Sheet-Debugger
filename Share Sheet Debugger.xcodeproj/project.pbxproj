@@ -217,9 +217,11 @@
 				TargetAttributes = {
 					D9F03AB31C808F8000372E43 = {
 						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = T2ABQ5MBH8;
 					};
 					D9F03ACC1C80914300372E43 = {
 						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = T2ABQ5MBH8;
 					};
 				};
 			};
@@ -228,6 +230,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -368,6 +371,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -405,6 +409,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -414,10 +419,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = T2ABQ5MBH8;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = "Share Sheet Debugger/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "net.yetii.Share-Sheet-Debugger";
+				PRODUCT_BUNDLE_IDENTIFIER = "uk.josephduffy.Share-Sheet-Debugger";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -426,10 +432,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = T2ABQ5MBH8;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = "Share Sheet Debugger/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "net.yetii.Share-Sheet-Debugger";
+				PRODUCT_BUNDLE_IDENTIFIER = "uk.josephduffy.Share-Sheet-Debugger";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -438,9 +445,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Action Extension Icon";
+				DEVELOPMENT_TEAM = T2ABQ5MBH8;
 				INFOPLIST_FILE = "Action Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "net.yetii.Share-Sheet-Debugger.Action-Extension";
+				PRODUCT_BUNDLE_IDENTIFIER = "uk.josephduffy.Share-Sheet-Debugger.Action-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -450,9 +458,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Action Extension Icon";
+				DEVELOPMENT_TEAM = T2ABQ5MBH8;
 				INFOPLIST_FILE = "Action Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "net.yetii.Share-Sheet-Debugger.Action-Extension";
+				PRODUCT_BUNDLE_IDENTIFIER = "uk.josephduffy.Share-Sheet-Debugger.Action-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};

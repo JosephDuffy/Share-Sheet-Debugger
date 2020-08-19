@@ -18,8 +18,8 @@ class ItemProviderTableViewCell: UITableViewCell {
         }
     }
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: .Value1, reuseIdentifier: reuseIdentifier)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: .value1, reuseIdentifier: reuseIdentifier)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -34,8 +34,8 @@ class ItemProviderTableViewCell: UITableViewCell {
         let typeIdentifiersCount = itemProvider.registeredTypeIdentifiers.count
         if typeIdentifiersCount > 1 {
             textLabel?.text = "\(typeIdentifiersCount) Types"
-            accessoryType = .DisclosureIndicator
-        } else if let rawTypeIdentifier = itemProvider.registeredTypeIdentifiers.first as? String where typeIdentifiersCount == 1 {
+            accessoryType = .disclosureIndicator
+        } else if let rawTypeIdentifier = itemProvider.registeredTypeIdentifiers.first, typeIdentifiersCount == 1 {
             let typeIdentifier = ItemProviderTypeIndentifier(rawValue: rawTypeIdentifier)
             switch typeIdentifier {
             case .Unknown:
@@ -44,9 +44,9 @@ class ItemProviderTableViewCell: UITableViewCell {
                 textLabel?.text = typeIdentifier.descriptor()
             }
             
-            accessoryType = .DisclosureIndicator
+            accessoryType = .disclosureIndicator
 
-            itemProvider.loadItemForTypeIdentifier(rawTypeIdentifier, options: nil, completionHandler: { [weak self] (item, error) -> Void in
+            itemProvider.loadItem(forTypeIdentifier: rawTypeIdentifier, options: nil, completionHandler: { [weak self] (item, error) -> Void in
                 guard let `self` = self else { return }
 
                 if let error = error {
@@ -58,7 +58,7 @@ class ItemProviderTableViewCell: UITableViewCell {
                     return
                 }
 
-                NSOperationQueue.mainQueue().addOperationWithBlock {
+                OperationQueue.main.addOperation {
                     if item is NSURL {
                         self.detailTextLabel?.text = "NSURL"
                     } else if item is String {
@@ -72,7 +72,7 @@ class ItemProviderTableViewCell: UITableViewCell {
             })
         } else {
             textLabel?.text = "Error loading identifiers"
-            accessoryType = .DisclosureIndicator
+            accessoryType = .disclosureIndicator
         }
     }
 

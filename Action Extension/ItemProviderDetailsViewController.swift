@@ -36,7 +36,7 @@ class ItemProviderDetailsViewController: UIViewController {
 
         title = typeIdentifier
 
-        itemProvider.loadItemForTypeIdentifier(typeIdentifier as String, options: nil, completionHandler: { (item, error) -> Void in
+        itemProvider.loadItem(forTypeIdentifier: typeIdentifier as String, options: nil, completionHandler: { (item, error) -> Void in
             if let error = error {
                 print("Error: \(error)")
                 return
@@ -46,13 +46,13 @@ class ItemProviderDetailsViewController: UIViewController {
                 return
             }
 
-            NSOperationQueue.mainQueue().addOperationWithBlock {
+            OperationQueue.main.addOperation {
                 if let item = item as? NSURL {
                     self.textView.text = item.absoluteString
                 } else if let item = item as? String {
                     self.textView.text = item
                 } else if let item = item as? NSData {
-                    if let dataAsString = String(data: item, encoding: NSUTF8StringEncoding) {
+                    if let dataAsString = String(data: item as Data, encoding: .utf8) {
                         self.textView.text = dataAsString
                     } else {
                         self.textView.text = item.description

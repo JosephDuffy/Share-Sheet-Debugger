@@ -20,11 +20,11 @@ class ItemProviderTableViewDataSource: NSObject, UITableViewDataSource {
         self.itemProvider = itemProvider
     }
 
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1 + itemProvider.registeredTypeIdentifiers.count
     }
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case MetaDataSection:
             return 2
@@ -34,7 +34,7 @@ class ItemProviderTableViewDataSource: NSObject, UITableViewDataSource {
         }
     }
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = indexPath.section
         let row = indexPath.row
 
@@ -42,30 +42,30 @@ class ItemProviderTableViewDataSource: NSObject, UITableViewDataSource {
         case MetaDataSection:
             switch row {
             case 0:
-                let cell = UITableViewCell(style: .Value1, reuseIdentifier: nil)
+                let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
                 cell.textLabel?.text = "Type Identifiers Count"
                 cell.detailTextLabel?.text = "\(itemProvider.registeredTypeIdentifiers.count)"
-                cell.selectionStyle = .None
+                cell.selectionStyle = .none
                 return cell
             case 1:
-                let cell = UITableViewCell(style: .Value1, reuseIdentifier: nil)
+                let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
                 cell.textLabel?.text = "Preview Image"
-                cell.selectionStyle = .None
+                cell.selectionStyle = .none
 
-                let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+                let activityIndicator = UIActivityIndicatorView(style: .gray)
                 activityIndicator.startAnimating()
                 cell.accessoryView = activityIndicator
-                itemProvider.loadPreviewImageWithOptions([:], completionHandler: { [weak cell, weak self] (image, error) in
+                itemProvider.loadPreviewImage(options: [:], completionHandler: { [weak cell, weak self] (image, error) in
                     guard let `self` = self else { return }
                     guard let cell = cell else { return }
 
-                    NSOperationQueue.mainQueue().addOperationWithBlock {
+                    OperationQueue.main.addOperation {
                         cell.accessoryView = nil
 
                         if let error = error {
                             cell.detailTextLabel?.text = "Error"
-                            cell.accessoryType = .None
-                            cell.selectionStyle = .None
+                            cell.accessoryType = .none
+                            cell.selectionStyle = .none
                             print("Error loading preview image: \(error)")
                             return
                         }
@@ -73,12 +73,12 @@ class ItemProviderTableViewDataSource: NSObject, UITableViewDataSource {
                         if let image = image {
                             self.loadedPreviewImage = image
                             cell.detailTextLabel?.text = "Available"
-                            cell.accessoryType = .DisclosureIndicator
-                            cell.selectionStyle = .Default
+                            cell.accessoryType = .disclosureIndicator
+                            cell.selectionStyle = .default
                         } else {
                             cell.detailTextLabel?.text = "Not Available"
-                            cell.accessoryType = .None
-                            cell.selectionStyle = .None
+                            cell.accessoryType = .none
+                            cell.selectionStyle = .none
                         }
                     }
                 })
@@ -88,39 +88,34 @@ class ItemProviderTableViewDataSource: NSObject, UITableViewDataSource {
             }
         default:
             let index = section - TypeIdentifiersSectionOffset
-            guard let rawTypeIdentifier = itemProvider.registeredTypeIdentifiers[index] as? String else {
-                let cell = UITableViewCell(style: .Default, reuseIdentifier: nil)
-                cell.textLabel?.text = "Error loading type identifier"
-                cell.selectionStyle = .None
-                return cell
-            }
+            let rawTypeIdentifier = itemProvider.registeredTypeIdentifiers[index]
             
             let typeIdentifier = ItemProviderTypeIndentifier(rawValue: rawTypeIdentifier)
 
             switch row {
             case 0:
-                let cell = UITableViewCell(style: .Value1, reuseIdentifier: nil)
+                let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
                 cell.textLabel?.text = "Raw Type"
                 cell.detailTextLabel?.text = typeIdentifier.rawValue
-                cell.selectionStyle = .None
+                cell.selectionStyle = .none
                 return cell
             case 1:
-                let cell = UITableViewCell(style: .Value1, reuseIdentifier: nil)
+                let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
                 cell.textLabel?.text = "Friendly Type"
                 cell.detailTextLabel?.text = typeIdentifier.descriptor()
-                cell.selectionStyle = .None
+                cell.selectionStyle = .none
                 return cell
             case 2:
-                let cell = UITableViewCell(style: .Value1, reuseIdentifier: nil)
+                let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
                 cell.textLabel?.text = "Object Type"
-                cell.selectionStyle = .None
+                cell.selectionStyle = .none
 
-                let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+                let activityIndicator = UIActivityIndicatorView(style: .gray)
                 activityIndicator.startAnimating()
                 cell.accessoryView = activityIndicator
-                itemProvider.loadItemForTypeIdentifier(rawTypeIdentifier, options: nil, completionHandler: { [weak cell] (item, error) -> Void in
+                itemProvider.loadItem(forTypeIdentifier: rawTypeIdentifier, options: nil, completionHandler: { [weak cell] (item, error) -> Void in
                     guard let cell = cell else { return }
-                    NSOperationQueue.mainQueue().addOperationWithBlock {
+                    OperationQueue.main.addOperation {
                         cell.accessoryView = nil
 
                         if let error = error {
@@ -147,9 +142,9 @@ class ItemProviderTableViewDataSource: NSObject, UITableViewDataSource {
                     })
                 return cell
             case 3:
-                let cell = UITableViewCell(style: .Default, reuseIdentifier: nil)
+                let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
                 cell.textLabel?.text = "View Data"
-                cell.accessoryType = .DisclosureIndicator
+                cell.accessoryType = .disclosureIndicator
                 cell.textLabel?.textColor = UIButton().tintColor
                 return cell
             default:
